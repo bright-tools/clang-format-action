@@ -26,7 +26,7 @@ done
 
 echo "Files downloaded!"
 
-FILES_TO_CHECK=$(echo *.{c,h,cpp,hpp,C,cc,CPP,c++,cp,cxx})
+FILES_TO_CHECK=$(find . -name *.cpp -o -name *.hpp -o -name *.c -o -name *.h})
 
 if [ -z "${FILES_TO_CHECK}"]; then
     echo "No files to be checked"
@@ -40,15 +40,14 @@ else
     clang-format --version
     clang-format -i ${FILES_TO_CHECK} > clang-format-report.txt
 
-    COMMENTS_URL=$(cat $GITHUB_EVENT_PATH | jq -r .pull_request.comments_url)
-
     OUTPUT=$'** clang-format **:\n'
     OUTPUT+=$(cat clang-format-report.txt)
     OUTPUT+=$'** clang-tidy **:\n'
     OUTPUT+=$(cat clang-tidy-report.txt)
 fi
 
-echo $COMMENTS_URL
+COMMENTS_URL=$(cat $GITHUB_EVENT_PATH | jq -r .pull_request.comments_url)
+echo "URL for comments post: $COMMENTS_URL"
 
 PAYLOAD=$(echo '{}' | jq --arg body "$OUTPUT" '.body = $body')
 
