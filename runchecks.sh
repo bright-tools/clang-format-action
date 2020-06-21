@@ -2,7 +2,7 @@
 
 FILES_TO_CHECK=$(find . -name *.cpp -o -name *.hpp -o -name *.c -o -name *.h})
 
-if [ -z "${FILES_TO_CHECK}"]; then
+if [ -z "${FILES_TO_CHECK}" ]; then
     echo "No files to be checked"
     OUTPUT="No C/C++ files changed"
 else
