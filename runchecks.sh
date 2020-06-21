@@ -28,19 +28,25 @@ echo "Files downloaded!"
 
 FILES_TO_CHECK=$(echo *.{c,h,cpp,hpp,C,cc,CPP,c++,cp,cxx})
 
-echo "clang-tidy checks"
-clang-tidy --version
-clang-tidy ${FILES_TO_CHECK} > clang-tidy-report.txt
-echo "clang-format checks"
-clang-format --version
-clang-format -i ${FILES_TO_CHECK} > clang-format-report.txt
+if [ -z "${FILES_TO_CHECK}"]; then
+    echo "No files to be checked"
+    OUTPUT="No C/C++ files changed"
+else
+    echo "Files to be checked: ${FILES_TO_CHECK}"
+    echo "clang-tidy checks"
+    clang-tidy --version
+    clang-tidy ${FILES_TO_CHECK} > clang-tidy-report.txt
+    echo "clang-format checks"
+    clang-format --version
+    clang-format -i ${FILES_TO_CHECK} > clang-format-report.txt
 
-COMMENTS_URL=$(cat $GITHUB_EVENT_PATH | jq -r .pull_request.comments_url)
+    COMMENTS_URL=$(cat $GITHUB_EVENT_PATH | jq -r .pull_request.comments_url)
 
-OUTPUT=$'** clang-format **:\n'
-OUTPUT+=$(cat clang-format-report.txt)
-OUTPUT+=$'** clang-tidy **:\n'
-OUTPUT+=$(cat clang-tidy-report.txt)
+    OUTPUT=$'** clang-format **:\n'
+    OUTPUT+=$(cat clang-format-report.txt)
+    OUTPUT+=$'** clang-tidy **:\n'
+    OUTPUT+=$(cat clang-tidy-report.txt)
+fi
 
 echo $COMMENTS_URL
 
