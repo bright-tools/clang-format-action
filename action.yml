@@ -1,0 +1,9 @@
+name: C/C++ code checker & formatter (clang-tidy and clang-format)
+description: Apply clang-tidy and clang-format to code
+author: bright-tools
+branding:
+  icon: alert-circle
+  color: green
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
