@@ -5,7 +5,8 @@ if [[ -z "$GITHUB_TOKEN" ]]; then
 	exit 1
 fi
 
-FILES_LINK=`jq -r '.pull_request._links.self.href' "$GITHUB_EVENT_PATH"`/files
+EVENT_PATH=$(jq -r '.pull_request._links.self.href' "$GITHUB_EVENT_PATH")
+FILES_LINK=${EVENT_PATH}/files
 echo "Files = $FILES_LINK"
 
 curl $FILES_LINK > files.json
@@ -20,15 +21,19 @@ cd files
 for i in "${URLS[@]}"
 do
    echo "Downloading $i"
-   curl -LOk --remote-name $i 
+   curl -LOs --remote-name $i 
 done
 
 echo "Files downloaded!"
-echo "Performing checkup:"
-clang-tidy --version
-clang-tidy *.c *.h *.cpp *.hpp *.C *.cc *.CPP *.c++ *.cp *.cxx > clang-tidy-report.txt
 
-clang-format -i *.c *.h *.cpp *.hpp *.C *.cc *.CPP *.c++ *.cp *.cxx > clang-format-report.txt
+FILES_TO_CHECK=$(echo *.c *.h *.cpp *.hpp *.C *.cc *.CPP *.c++ *.cp *.cxx)
+
+echo "clang-tidy checks"
+clang-tidy --version
+clang-tidy ${FILES_TO_CHECK} > clang-tidy-report.txt
+echo "clang-format checks"
+clang-format --version
+clang-format -i ${FILES_TO_CHECK} > clang-format-report.txt
 
 COMMENTS_URL=$(cat $GITHUB_EVENT_PATH | jq -r .pull_request.comments_url)
 
