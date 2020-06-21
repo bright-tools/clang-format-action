@@ -26,6 +26,19 @@ done
 echo "Files downloaded!"
 echo "Performing checkup:"
 clang-tidy --version
-clang-tidy *.c *.h *.cpp *.hpp *.C *.cc *.CPP *.c++ *.cp *.cxx -checks=boost-*,bugprone-*,performance-*,readability-*,portability-*,modernize-*,clang-analyzer-cplusplus-*,clang-analyzer-*,cppcoreguidelines-* > clang-tidy-report.txt
+clang-tidy *.c *.h *.cpp *.hpp *.C *.cc *.CPP *.c++ *.cp *.cxx > clang-tidy-report.txt
 
-clang-format --style=llvm -i *.c *.h *.cpp *.hpp *.C *.cc *.CPP *.c++ *.cp *.cxx > clang-format-report.txt
+clang-format -i *.c *.h *.cpp *.hpp *.C *.cc *.CPP *.c++ *.cp *.cxx > clang-format-report.txt
+
+COMMENTS_URL=$(cat $GITHUB_EVENT_PATH | jq -r .pull_request.comments_url)
+
+OUTPUT=$'** clang-format **:\n'
+OUTPUT+=`cat clang-format-report.txt`
+OUTPUT+=$'** clang-tidy **:\n'
+OUTPUT+=`cat clang-tidy-report.txt`
+
+echo $COMMENTS_URL
+
+PAYLOAD=$(echo '{}' | jq --arg body "$OUTPUT" '.body = $body')
+
+curl -s -S -H "Authorization: token $GITHUB_TOKEN" --header "Content-Type: application/vnd.github.VERSION.text+json" --data "$PAYLOAD" "$COMMENTS_URL"
