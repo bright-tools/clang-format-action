@@ -7,9 +7,6 @@ if [ -z "${FILES_TO_CHECK}" ]; then
     OUTPUT="No C/C++ files changed"
 else
     echo "Files to be checked: ${FILES_TO_CHECK}"
-    # echo "clang-tidy checks"
-    # clang-tidy --version
-    # clang-tidy ${FILES_TO_CHECK}
     echo "clang-format checks"
     clang-format --version
     clang-format -n -Werror ${FILES_TO_CHECK}
