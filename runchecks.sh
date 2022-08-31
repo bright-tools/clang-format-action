@@ -8,8 +8,8 @@ if [ -z "${FILES_TO_CHECK}" ]; then
 else
     echo "Files to be checked: ${FILES_TO_CHECK}"
     echo "clang-format checks"
-    clang-format-action --version
-    clang-format-action -n -Werror ${FILES_TO_CHECK}
+    clang-format-$1 --version
+    clang-format-$1 -n -Werror ${FILES_TO_CHECK}
     if [ $? -ne 0 ]; then
         exit 1
     fi
