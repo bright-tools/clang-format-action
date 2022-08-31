@@ -8,7 +8,7 @@ LABEL com.github.actions.color="gray-dark"
 LABEL repository="https://github.com/bright-tools/clang-format-action"
 LABEL maintainer="bright-tools <dev@brightsilence.com>"
 
-ARG INPUT_CLANGVERSION=${INPUT_CLANGVERSION:-""}
+ENV INPUT_CLANGVERSION=${INPUT_CLANGVERSION:-""}
 
 WORKDIR /build
 RUN apt-get update
