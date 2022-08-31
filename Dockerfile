@@ -12,7 +12,8 @@ ARG INPUT_CLANGVERSION=${INPUT_CLANGVERSION:-""}
 
 WORKDIR /build
 RUN apt-get update
-RUN apt-get -qq -y install curl clang-format-$INPUT_CLANGVERSION jq
+RUN echo "Clang ${INPUT_CLANGVERSION}"
+RUN apt-get -qq -y install curl clang-format-${INPUT_CLANGVERSION} jq
 RUN ln -s /usr/bin/clang-format-$INPUT_CLANGVERSION /usr/bin/clang-format-action
 
 ADD runchecks.sh /entrypoint.sh
