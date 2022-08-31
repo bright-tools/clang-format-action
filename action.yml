@@ -7,3 +7,8 @@ branding:
 runs:
   using: 'docker'
   image: 'Dockerfile'
+inputs:
+  clangversion:
+    description: 'Clang version'
+    required: false
+    default: '12'
