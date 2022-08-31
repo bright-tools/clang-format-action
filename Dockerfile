@@ -12,6 +12,5 @@ WORKDIR /build
 RUN apt-get update
 RUN apt-get -qq -y install curl clang-format-8 clang-format-9 clang-format-10 clang-format-11 clang-format-12 jq
 
-ADD runchecks.sh /entrypoint.sh
-COPY . .
-CMD ["bash", "/entrypoint.sh"]
+COPY runchecks.sh /entrypoint.sh
+ENTRYPOINT ["/entrypoint.sh"]
